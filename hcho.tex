@@ -1,0 +1,100 @@
+%% Copernicus Publications Manuscript Preparation Template for LaTeX Submissions
+%% ---------------------------------
+%% This template should be used for copernicus.cls
+%% The class file and some style files are bundled in the Copernicus Latex Package, which can be downloaded from the different journal webpages.
+%% For further assistance please contact Copernicus Publications at: production@copernicus.org
+%% http://publications.copernicus.org/for_authors/manuscript_preparation.html
+%% Please use the following documentclass and journal abbreviations for discussion papers and final revised papers.
+
+\documentclass[acp, manuscript]{copernicus} % single column manuscript: used for both discussion and submission
+
+\begin{document}
+\title{Isoprene emissions over Australia}
+
+% \Author[affil]{given_name}{surname}
+\Author[1]{Jesse W.}{Greenslade}
+\Author[1,2]{Jenny A.}{Fisher}
+
+\affil[1]{Centre for Atmospheric Chemistry, School of Chemistry, University of Wollongong, Australia}
+\affil[2]{School of Earth \& Environmental Sciences, University of Wollongong, Australia}
+
+\runningtitle{Australian isorene emissions}
+\runningauthor{Greenslade et al.}
+\correspondence{Jesse Greenslade (jwg366@uowmail.edu.au)}
+
+%% These dates will be inserted by Copernicus Publications during the typesetting process.
+\firstpage{1}
+\maketitle
+
+\begin{abstract}
+  
+\end{abstract}
+
+% Section 1 -- INTRO
+\introduction  %% \introduction[modified heading if necessary]
+
+  % AIMs paragraph
+
+
+\section{Data and Model}
+  \label{sec:DataModel}
+    
+    % EXAMPLE FIGURE
+    %\begin{figure}[t]
+    %  % Figure 4 
+    %  % created in blah
+    %  \includegraphics[width=8.3cm]{figures/filtereg.png}
+    %  \caption{ %
+    %	}
+    %  \label{fig:process}
+    %\end{figure}
+   
+    % EXAMPLE TABLE
+%   \begin{table}[t]
+%     %\centering
+%     \caption{Total number of ozonesonde detected STT events, along with the number of events in each category (see text).}
+%     \begin{tabular}{ c   c   c   c   c   c   c } 
+%       \hline
+%       Site & Events & Cut-offs & Frontals & Misc & Fire \\
+%       \hline
+%       % 41,   31,  28,  27
+%       Davis       	& 80 & 44  & 19 & 17 & 0 \\ 
+%       Macquarie Island 	& 105 & 19 & 31 & 34  & 21 \\
+%       Melbourne 	& 127 & 28 & 31 & 41 & 27 \\
+%       \hline
+%     \end{tabular}
+%     \label{table:EventCounts}
+%   \end{table}
+  
+  
+\conclusions  %% \conclusions[modified heading if necessary]
+
+
+\appendix
+% \section{}    %% Appendix A
+% \subsection{}     %% Appendix A1, A2, etc.
+
+\appendixfigures  %% needs to be added in front of appendix figures in one-column style (\documentclass[acp, manuscript]{copernicus})
+\appendixtables   %% needs to be added in front of appendix tables in one-column style (\documentclass[acp, manuscript]{copernicus})
+
+\authorcontribution{}
+
+\competinginterests{The authors declare that they have no conflict of interest.}
+
+%\disclaimer{disclaimer}
+
+% Data availability
+%
+\textit{Data availability.} All GEOS-Chem model output is available from the authors upon request.
+
+\begin{acknowledgements}
+This research is supported by an Australian Government Research Training Program (RTP) Scholarship.
+\end{acknowledgements}
+
+%% Since the Copernicus LaTeX package includes the BibTeX style file copernicus.bst,
+%% authors experienced with BibTeX only have to include the following two lines:
+%%
+\bibliographystyle{copernicus}
+\bibliography{bibliography/hcho.bib}
+
+\end{document}
