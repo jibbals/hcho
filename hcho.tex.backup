@@ -33,13 +33,6 @@
 % Section 1 -- INTRO
 \introduction  %% \introduction[modified heading if necessary]
 
-Emissions of isoprene may be overestimated in Australia.
-One of the most popular emissions inventories for biogenic isoprene, the Model of Emissions of Gases and Aerosols from Nature (MEGAN) is poorly calibrated for Australian conditions.
-\cite{Muller2008} compared MEGANv2 against emissions calculated using top down estimates from the GOME2 satellite measurements of formaldehyde.
-\cite{Stavrakou2015} showed that this overestimate may be a factor of 2-3 in January.
-\cite{Sindelarova2014} show how 50\% of the isoprene emissions could be reduced by accounting for lower soil moisture.
-\cite{Emmerson2016} discuss the suitability of MEGAN's isoprene and monoterpene emission factors over southeast Australia, and suggest ...TODO:
-
   % AIMs paragraph
 
 
@@ -99,13 +92,12 @@ One of the most popular emissions inventories for biogenic isoprene, the Model o
     % Other method: $k_{HCHO}*\Omega_{HCHO}$, and $k_{isop}*\Omega_{isop}$.
     %For an initial estimate of the effective yield from simulated data: we use $k_{HCHO}$, $k_{i}$, $\Omega_{HCHO}$, and $\Omega_i$ outputs from a standard run of GEOS-Chem - which provides one data point per day.
     This gives us a monthly value for $Y_i$ resolved to our 2$^{\circ}$ by 2.5$^{\circ}$ horizontal resolution, which is entirely based on the model.
-    Using our measurements of the biogenic HCHO column ($\hat{\Omega}_{HCHO}$) recalculated from the OMI satellite product, we use this derived yield and the same formula to determine our new top-down emissions estimates.
+    Using our measurements of the biogenic HCHO column ($\Omega_{OMIHCHO}$) recalculated from the OMI satellite product, we use this derived yield and the same formula to determine our new top-down emissions estimates.
     Figure \ref{fig:E_isop_vs_hcho_model_sample} shows the modelled isoprene emissions and column HCHO concentrations along with the RMA regression line, sampled from grid boxes over Australia for January 2005.
     Some affects from the low emissions in grid boxes which are largely oceanic can be seen and are handled by TODO: handle these and document here.
     
     Modeled background emissions are ignored as they do not affect the calculation of the modeled slope.
-    The OMI background is calculated from the averaged column amounts over the remote pacific (15$^{\circ}$ S to 15$^{\circ}$ N, 175 to 120$^{\circ}$ W)
-    However, when calculating the $E_{isop}$ from our modeled slope with OMI HCHO and background, we end up with negative emissions wherever the OMI HCHO column is less than the OMI background (as $E_{isop} = \frac{\Omega_{HCHO} - B}{S})
+    However, when calculating the $E_{isop}$ from our modeled slope 
     \begin{figure}[!htbp]
       % Figure from GC_tests.py -> isop_hcho_RMA
       \includegraphics[width=\textwidth]{figures/E_isop_vs_hcho_series.png}
