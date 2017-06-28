@@ -1,0 +1,7 @@
+
+# ignore latex auxilliary files
+*.blg
+*.log
+*.bbl
+*.aux
+
