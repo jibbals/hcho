@@ -33,14 +33,15 @@
 % Section 1 -- INTRO
 \introduction  %% \introduction[modified heading if necessary]
 
-  Emissions of isoprene may be overestimated in Australia.
+  Emissions of isoprene (C$_5$H$_8$) may be overestimated in Australia.
   One of the most popular emissions inventories for biogenic isoprene, the Model of Emissions of Gases and Aerosols from Nature (MEGAN) is poorly calibrated for Australian conditions.
-  \cite{Muller2008} compared MEGANv2 against emissions calculated using top down estimates from the GOME2 satellite measurements of formaldehyde.
+  \cite{Muller2008} compared MEGAN against emissions calculated using top down estimates from the GOME2 satellite measurements of formaldehyde.
   \cite{Stavrakou2015} showed that this overestimate may be a factor of 2-3 in January.
   \cite{Sindelarova2014} show how 50\% of the isoprene emissions could be reduced by accounting for lower soil moisture.
   \cite{Emmerson2016} discuss the suitability of MEGAN's isoprene and monoterpene emission factors over southeast Australia, and suggest isoprene emissions are estimated 2-6 times too high.
   They also show that no blanket increase or decrease in emission factors is appropriate for the entire southeast of Australia.
   Satellite based emissions estimates may allow us to improve the models without requiring lots of hard work on calibrating MEGAN to the large data sparse continent of Australia.
+  Emissions of monoterpenes (C$_10$H$_16$, two units of isoprene) may also be underestimated in southeastern Australia, which could lead to the unique scenario of neither type of emission dominating VOC chemistry over the forests \citep{Emmerson2016}.
 
   % AIMs paragraph
   Here we introduce how uncertain isoprene emissions are over Australia, and discuss literature which shows how the estimates may be too high.
@@ -53,8 +54,18 @@
   \subsection{GEOS-Chem simulation}
     \label{sec:GEOSChemSimulation}
     The GEOS-Chem global atmospheric chemistry model (V10.01) simulates and records up to 66 chemical species (tracers) in the standard run, at 2 by 2.5$^{\circ}$ horizontal resolution, with 47 levels up to the top of the atmosphere (TOA at 0.01~hPa). 
-    Output for an area averaged over 1200 - 1400 local time can be saved for comparison and recalculation with satellite overpass records.
     GEOS-5 meteorological fields from NASA's ...(TODO: ref and note) are used to drive transport and coupled with the chemical module of GEOS-Chem.
+    MEGAN is used to determine biogenic emissions for our default GEOS-Chem simulation, with subsequent modifications based on top-down estimates made herein.
+    
+    
+    Output for an area averaged over 1200 - 1400 local time can be saved for comparison and recalculation with satellite overpass records.
+  
+  \subsection{Box model for sources classifications}
+    \label{sec:CabbaMecca}
+    TODO: Description of CAABA/MECCA and how it's used.
+    
+    TODO: Description of how scenario yields can be calculated.
+    
   
   \subsection{Campaigns and datasets}
     \label{sec:Campaigns}
@@ -68,8 +79,10 @@
     SPS1,2 summary
   
   \subsection{Recalculation of OMI HCHO}
+  \label{sec:omiRecalc}
+    The AMFs for OMI are recalculated using shape factors based on GEOS-Chem HCHO profiles, averaged between 1200 and 1400 local time (LT).
     The method used here largely follows that of \citet{Palmer2001}.
-    When comparing satellite observations to a chemical model, one needs to recalculate the satellite AMF using their own modelled vertical gas profiles as the a-prior shape factor in order to remove any total column bias which may be due to the satellite's apriori.
+    When comparing satellite observations to a chemical model, recalculation of the satellite AMF using modelled vertical gas profiles removes any bias introduced by differences from the a-priori shape factor to the model.
     The AMF is needed to transform the slant column, as viewed by the satellite, into a vertical column:
     \begin{equation} \label{eqn:AMFratio}
       AMF = \frac{\Omega_s}{\Omega_v} %= \frac{\tau_s}{\tau_v}
@@ -94,49 +107,51 @@
     
     The AMF calculated using Dr. Palmer's code uses a more strict series of filters, leading to fewer satellite based HCHO columns and reduced coverage over Australia.
     Stricter filtering must be balanced against both coverage and the sensitivity of the AMF determination to recalculating $\omega_z$.
-    
   
   \subsection{Calculation of Emissions}
     % \label{ch_isop:sec:EmissionCalculation} <- thesis label
     \label{sec:EmissionCalculation}
     
     As is done in \citet{Palmer2003, Millet2006, Bauwens2016}, we assume that HCHO, and Isoprene columns are in a steady state, with no horizontal transport.
-    In these circumstances the emissions of precursors are easy to calculate as long as we know the molar HCHO yields (Y$_i$) and effective chemical loss rates (k$_i$):
+    Emissions of precursors are easy to calculate as long as we know the molar HCHO yields (Y$_i$) and effective chemical loss rates (k$_i$):
     \begin{equation}
       \Omega_{HCHO} = \frac{1}{k_{HCHO}}\Sigma_i k_i Y_i \Omega_i = \frac{1}{k_{HCHO}}\Sigma_i Y_i E_i
     \end{equation}
     
+    In order to approximate the isoprene to HCHO yields over Australia, GEOS-Chem is run and the slope (S) between modelled tropospheric HCHO columns and emissions of isoprene within each grid box. 
+    TODO: example grid box and regression plot.
     We can infer the local (grid space) isoprene emissions (E$_{isop}$) using effective formaldehyde yield from isoprene ($Y_{isop}$).
     \begin{equation} \label{eqn:isop_yield}
       \Omega_{HCHO} = S \times E_{isop} + B
     \end{equation}
-    Where \textit{B} is the background HCHO, and $S = Y_{isop}/k_{HCHO}$ is determined monthly as the regression between $\Omega_{HCHO}$ and E$_{isop}$ on daily output from GEOS-Chem over Australia using 2 by 2.5$^{\circ}$ horizontal resolution.
+    Where \textit{B} is the background HCHO, and $S = Y_{isop}/k_{HCHO}$ is determined monthly as the regression between $\Omega_{HCHO}$ and E$_{isop}$ on daily saved outputs from GEOS-Chem over Australia using 2 by 2.5$^{\circ}$ horizontal resolution. 
+    Modeled background emissions are ignored as they do not affect the calculation of the slope.
     
-    % Other method: $k_{HCHO}*\Omega_{HCHO}$, and $k_{isop}*\Omega_{isop}$.
-    %For an initial estimate of the effective yield from simulated data: we use $k_{HCHO}$, $k_{i}$, $\Omega_{HCHO}$, and $\Omega_i$ outputs from a standard run of GEOS-Chem - which provides one data point per day.
-    This gives us a monthly value for $Y_i$ resolved to our 2$^{\circ}$ by 2.5$^{\circ}$ horizontal resolution, which is entirely based on the model.
-    Using our measurements of the biogenic HCHO column ($\hat{\Omega}_{HCHO}$) recalculated from the OMI satellite product, we use this derived yield and the same formula to determine our new top-down emissions estimates.
+    Once we have calculated this slope, we use the same formula (Eqn. \ref{eqn:isop_yield}) to determine the isoprene emissions.
+    By replacing $\Omega_{HCHO}$ and $B$ with OMI based values, $E_{isop}$ is the only unknown.
+    The $B$ackground from OMI  is determined using the mean column HCHO measured over the remote pacific ocean (180-120$^{\circ}$W, 10-60$^{\circ}$S).
+    This is gives us a background which is appropriate for the Australian latitudes, and is shown in Figure TODO: figure with background region highlighted and a time series of background values.
+    When calculating the $E_{isop}$ from our modeled slope with OMI HCHO and background, we end up with negative emissions wherever the OMI HCHO column is less than the OMI background (as $E_{isop} = \frac{\Omega_{HCHO} - B}{S}$).
+    These are set to zero, which increases the average by around TODO: X\%.
+    
     Figure \ref{fig:E_isop_vs_hcho_model_sample} shows the modelled isoprene emissions and column HCHO concentrations along with the RMA regression line, sampled from grid boxes over Australia for January 2005.
     Some affects from the low emissions in grid boxes which are largely oceanic can be seen and are handled by TODO: handle these and document here.
-    
-    Modeled background emissions are ignored as they do not affect the calculation of the modeled slope.
-    The OMI background is calculated from the averaged column amounts over the remote pacific (15$^{\circ}$ S to 15$^{\circ}$ N, 175 to 120$^{\circ}$ W)
-    However, when calculating the $E_{isop}$ from our modeled slope with OMI HCHO and background, we end up with negative emissions wherever the OMI HCHO column is less than the OMI background (as $E_{isop} = \frac{\Omega_{HCHO} - B}{S}$).
+    Due to the low horizontal resolution of GEOS-Chem (2 by 2.5$^{\circ}$, latitude by longitude), calculations from grid boxes on the coast which are largely oceanic need to be discarded as the change in HCHO is not dominated by emissions of isoprene, as is assumed for Eqn \ref{eqn:isop_yield}.
+    A nested version of GEOS-Chem allows a much better analysis of coastal regions, at 0.25 by 0.3125$^{\circ}$ resolution.
     \begin{figure}[!htbp]
       % Figure from GC_tests.py -> isop_hcho_RMA
       \includegraphics[width=\textwidth]{figures/E_isop_vs_hcho_series_200501.png}
       \caption{%
-	Top panel: isoprene emissions for January, 2005, shown in red, coplotted with tropospheric hcho columns, shown in magenta.
-	Both series are daily averages over Australia.
-	Bottom panel: (RMA) linear regressions from between emissions of isoprene and tropospheric hcho columns, sampled randomly from the 2$^{\circ}$ by 2.5$^{\circ}$ latitude longitude gridboxes over Australia for the month of January (2005).
+        Top panel: isoprene emissions for January, 2005, shown in red, coplotted with tropospheric hcho columns, shown in magenta.
+        Both series are daily averages over Australia.
+	      Bottom panel: (RMA) linear regressions from between emissions of isoprene and tropospheric hcho columns, sampled randomly from the 2$^{\circ}$ by 2.5$^{\circ}$ latitude longitude gridboxes over Australia for the month of January (2005).
       }
       \label{fig:E_isop_vs_hcho_model_sample}
     \end{figure}
     
+    TODO: put this into results
     Using this modelled slope at 2$^{\circ}$ by 2.5$^{\circ}$ and applying it to equation \ref{eqn:isop_yield} with B and $\Omega_{HCHO}$ calculated using OMI satellite measurements provides a new estimate of isoprene emissions.
     Figure \ref{fig:E_isop_200501} shows the emissions calculated this way along with the Emissions output by GEOS-Chem averaged over January, 2005.
-    
-    
     \begin{figure}[!htbp]
       % Figure from Inversion.py -> check_against_MEGAN()
       \includegraphics[width=\textwidth]{figures/E_Comparison.png}
@@ -147,8 +162,14 @@
       \label{fig:E_isop_200501}
     \end{figure}
     
+  \subsection{Emisions drivers}
+    Calculated yields of HCHO can be classified using a box model which approximates specific environments.
+    TODO: A table of different factors affecting emissions for three scenarios; urban, forest, shrublands is given in Table XX.
+    The calculated yields for these scenarios is based on the CAABA/MECCA box model described in Section \ref{sec:CabbaMecca}TODO: compare scenarios yields and show map of Australia with mapped closest scenario(one colour for each scenario, contourf).
     
 \section{Results}
+  
+  
   
   \subsection{Emissions affect on GEOS-Chem}
     We interpolated or something (TODO) the emissions over Australia into the inventories used by GEOS-Chem which reduced the emissions by X\% per year (over Australia).
