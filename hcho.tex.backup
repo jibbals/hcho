@@ -33,53 +33,31 @@
 % Section 1 -- INTRO
 \introduction  %% \introduction[modified heading if necessary]
 
-Emissions of isoprene may be overestimated in Australia.
-One of the most popular emissions inventories for biogenic isoprene, the Model of Emissions of Gases and Aerosols from Nature (MEGAN) is poorly calibrated for Australian conditions.
-\cite{Muller2008} compared MEGANv2 against emissions calculated using top down estimates from the GOME2 satellite measurements of formaldehyde.
-\cite{Stavrakou2015} showed that this overestimate may be a factor of 2-3 in January.
-\cite{Sindelarova2014} show how 50\% of the isoprene emissions could be reduced by accounting for lower soil moisture.
-\cite{Emmerson2016} discuss the suitability of MEGAN's isoprene and monoterpene emission factors over southeast Australia, and suggest ...TODO:
+  Emissions of isoprene may be overestimated in Australia.
+  One of the most popular emissions inventories for biogenic isoprene, the Model of Emissions of Gases and Aerosols from Nature (MEGAN) is poorly calibrated for Australian conditions.
+  \cite{Muller2008} compared MEGANv2 against emissions calculated using top down estimates from the GOME2 satellite measurements of formaldehyde.
+  \cite{Stavrakou2015} showed that this overestimate may be a factor of 2-3 in January.
+  \cite{Sindelarova2014} show how 50\% of the isoprene emissions could be reduced by accounting for lower soil moisture.
+  \cite{Emmerson2016} discuss the suitability of MEGAN's isoprene and monoterpene emission factors over southeast Australia, and suggest isoprene emissions are estimated 2-6 times too high.
+  They also show that no blanket increase or decrease in emission factors is appropriate for the entire southeast of Australia.
+  Satellite based emissions estimates may allow us to improve the models without requiring lots of hard work on calibrating MEGAN to the large data sparse continent of Australia.
 
   % AIMs paragraph
-
-
-\section{Data and Model}
-  \label{sec:DataModel}
-    
-    % EXAMPLE FIGURE
-    %\begin{figure}[t]
-    %  % Figure 4 
-    %  % created in blah
-    %  \includegraphics[width=8.3cm]{figures/filtereg.png}
-    %  \caption{ %
-    %	}
-    %  \label{fig:process}
-    %\end{figure}
-   
-    % EXAMPLE TABLE
-%   \begin{table}[t]
-%     %\centering
-%     \caption{Total number of ozonesonde detected STT events, along with the number of events in each category (see text).}
-%     \begin{tabular}{ c   c   c   c   c   c   c } 
-%       \hline
-%       Site & Events & Cut-offs & Frontals & Misc & Fire \\
-%       \hline
-%       % 41,   31,  28,  27
-%       Davis       	& 80 & 44  & 19 & 17 & 0 \\ 
-%       Macquarie Island 	& 105 & 19 & 31 & 34  & 21 \\
-%       Melbourne 	& 127 & 28 & 31 & 41 & 27 \\
-%       \hline
-%     \end{tabular}
-%     \label{table:EventCounts}
-%   \end{table}
+  Here we introduce how uncertain isoprene emissions are over Australia, and discuss literature which shows how the estimates may be too high.
+  Section \ref{sec:MethodsAndData} describes the methods, models, and campaign data we use to determine and analyse isoprene emissions.
+  
 
 \section{Methods and data}
+  \label{sec:MethodsAndData}
+  
   \subsection{GEOS-Chem simulation}
+    \label{sec:GEOSChemSimulation}
     The GEOS-Chem global atmospheric chemistry model (V10.01) simulates and records up to 66 chemical species (tracers) in the standard run, at 2 by 2.5$^{\circ}$ horizontal resolution, with 47 levels up to the top of the atmosphere (TOA at 0.01~hPa). 
     Output for an area averaged over 1200 - 1400 local time can be saved for comparison and recalculation with satellite overpass records.
     GEOS-5 meteorological fields from NASA's ...(TODO: ref and note) are used to drive transport and coupled with the chemical module of GEOS-Chem.
   
   \subsection{Campaigns and datasets}
+    \label{sec:Campaigns}
     TODO: these summaries.
     OMI summary
     
@@ -88,6 +66,33 @@ One of the most popular emissions inventories for biogenic isoprene, the Model o
     MUMBA summary
   
   \subsection{Recalculation of OMI HCHO}
+    The method used here largely follows that of \citet{Palmer2001}.
+    When comparing satellite observations to a chemical model, one needs to recalculate the satellite AMF using their own modelled vertical gas profiles as the a-prior shape factor in order to remove any total column bias which may be due to the satellite's apriori.
+    The AMF is needed to transform the slant column, as viewed by the satellite, into a vertical column:
+    \begin{equation} \label{eqn:AMFratio}
+      AMF = \frac{\Omega_s}{\Omega_v} %= \frac{\tau_s}{\tau_v}
+    \end{equation}
+    where s and v subscripts refer to slant and vertical values, while $\Omega$ represents a column of absorber in molecules cm$^{-2}$.
+  
+    % HERE I SUMMARISE THE AMF CALCULATION
+    The vertical shape factor S$_z$(z) is defined as a normalized vertical number density profile $S_z(z) = \frac{\eta(z)}{\Omega_v}$ where $\eta(z)$ is the number density in molecules m$^{-3}$. 
+    The AMF can be expressed as
+    \begin{equation} \label{eqn:AMFintwSdz}
+      AMF = AMF_G \int_0^\infty w(z) S_z(z) \mathrm{d}z
+    \end{equation}
+    Where w(z) is the scattering weights describing the sensitivity of the backscattered spectrum to the abundance of an absorber at altitude z.
+    It's worth noting that in the OMI satellite product, the provided $\omega(z)$ incorporates the $AMF_G$ term and the equation \ref{eqn:AMFintwSdz} should be implemented without this term if using the satellite $\omega$.
+    This is not noted in any of the papers which recalculate the AMF from the OMI product, due to them recalculating the $\omega$ term themselves with a radiative transfer model such as LIDORT.
+    
+    Two HCHO products are created, both using GEOS-Chem output at global 2 by 2.5$^{\circ}$ horizontal resolution.
+    One uses the OMI product's $\omega_z$ and equation \ref{eqn:AMFintwSdz} in order to calculate an AMF.
+    While the other uses code provided by Dr. Paul Palmer, with alterations by Dr. Randal Martin, and Dr. Luke Surl to run LIDORT on the satellite slant columns and the GEOS-Chem output in order to calculate an AMF.
+    These two calculations are compared over Australia in figure(s) TODO: Map comparison, regression, and time series once AMF_pp is working properly.
+    The effect of not recalculating the $\omega_z$ is TODO: summarise changes between these calculations.
+    
+    The AMF calculated using Dr. Palmer's code uses a more strict series of filters, leading to fewer satellite based HCHO columns and reduced coverage over Australia.
+    Stricter filtering must be balanced against both coverage and the sensitivity of the AMF determination to recalculating $\omega_z$.
+    
   
   \subsection{Calculation of Emissions}
     % \label{ch_isop:sec:EmissionCalculation} <- thesis label
@@ -103,7 +108,7 @@ One of the most popular emissions inventories for biogenic isoprene, the Model o
     \begin{equation} \label{eqn:isop_yield}
       \Omega_{HCHO} = S \times E_{isop} + B
     \end{equation}
-    Where \textit{B} is the background HCHO, and $S = Y_{isop}/k_{HCHO}$ is determined monthly as the regression between $\Omega_{HCHO}$ and E$_{isop}$ on daily saved outputs from GEOS-Chem over Australia using 2 by 2.5$^{\circ}$ horizontal resolution.
+    Where \textit{B} is the background HCHO, and $S = Y_{isop}/k_{HCHO}$ is determined monthly as the regression between $\Omega_{HCHO}$ and E$_{isop}$ on daily output from GEOS-Chem over Australia using 2 by 2.5$^{\circ}$ horizontal resolution.
     
     % Other method: $k_{HCHO}*\Omega_{HCHO}$, and $k_{isop}*\Omega_{isop}$.
     %For an initial estimate of the effective yield from simulated data: we use $k_{HCHO}$, $k_{i}$, $\Omega_{HCHO}$, and $\Omega_i$ outputs from a standard run of GEOS-Chem - which provides one data point per day.
@@ -127,7 +132,8 @@ One of the most popular emissions inventories for biogenic isoprene, the Model o
     \end{figure}
     
     Using this modelled slope at 2$^{\circ}$ by 2.5$^{\circ}$ and applying it to equation \ref{eqn:isop_yield} with B and $\Omega_{HCHO}$ calculated using OMI satellite measurements provides a new estimate of isoprene emissions.
-    Figure TODO: \ref{fig:E_isop_200501} shows the emissions calculated this way along with the Emissions output by GEOS-Chem averaged over January, 2005.
+    Figure \ref{fig:E_isop_200501} shows the emissions calculated this way along with the Emissions output by GEOS-Chem averaged over January, 2005.
+    
     
     \begin{figure}[!htbp]
       % Figure from Inversion.py -> check_against_MEGAN()
@@ -158,6 +164,10 @@ One of the most popular emissions inventories for biogenic isoprene, the Model o
     When compared against recalculated emissions we see TODO.
     
     TODO: Figure showing campaign data against model and recalculated emissions over region for averaged months and eventually different resolutions.
+    
+    %As is done in \cite{Emmerson2016}, 
+    We examine the affect of decreased isoprene emissions on the correlation between modelled and satellite based HCHO columns.
+    Figure TODO: shows the regressions between GEOS-Chem tropospheric column amounts of HCHO and satellite columns for two runs of GEOS-Chem: a) using standard MEGAN emissions, b) using our updated emissions.
     
     
     
