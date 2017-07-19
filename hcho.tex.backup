@@ -124,29 +124,20 @@
     \begin{equation} \label{eqn:isop_yield}
       \Omega_{HCHO} = S \times E_{isop} + B
     \end{equation}
-<<<<<<< HEAD
-    Where \textit{B} is the background HCHO, and $S = Y_{isop}/k_{HCHO}$ is determined monthly as the regression between $\Omega_{HCHO}$ and E$_{isop}$ on daily output from GEOS-Chem over Australia using 2 by 2.5$^{\circ}$ horizontal resolution.
-    
-    % Other method: $k_{HCHO}*\Omega_{HCHO}$, and $k_{isop}*\Omega_{isop}$.
-    %For an initial estimate of the effective yield from simulated data: we use $k_{HCHO}$, $k_{i}$, $\Omega_{HCHO}$, and $\Omega_i$ outputs from a standard run of GEOS-Chem - which provides one data point per day.
-    This gives us a monthly value for $Y_i$ resolved to our 2$^{\circ}$ by 2.5$^{\circ}$ horizontal resolution, which is entirely based on the model.
-    Using our measurements of the biogenic HCHO column ($\hat{\Omega}_{HCHO}$) recalculated from the OMI satellite product, we use this derived yield and the same formula to determine our new top-down emissions estimates.
-    Figure \ref{fig:E_isop_vs_hcho_model_sample} shows the modelled isoprene emissions and column HCHO concentrations along with the RMA regression line, sampled from grid boxes over Australia for January 2005.
-    Some affects from the low emissions in grid boxes which are largely oceanic can be seen and are handled by TODO: handle these and document here.
-    
-    Modeled background emissions are ignored as they do not affect the calculation of the modeled slope.
-    The OMI background is calculated from the averaged column amounts over the remote pacific (15$^{\circ}$ S to 15$^{\circ}$ N, 175 to 120$^{\circ}$ W)
-    However, when calculating the $E_{isop}$ from our modeled slope with OMI HCHO and background, we end up with negative emissions wherever the OMI HCHO column is less than the OMI background (as $E_{isop} = \frac{\Omega_{HCHO} - B}{S}$).
-=======
     Where \textit{B} is the background HCHO, and $S = Y_{isop}/k_{HCHO}$ is determined monthly as the regression between $\Omega_{HCHO}$ and E$_{isop}$ on daily saved outputs from GEOS-Chem over Australia using 2 by 2.5$^{\circ}$ horizontal resolution. 
     Modeled background emissions are ignored as they do not affect the calculation of the slope.
     
     Once we have calculated this slope, we use the same formula (Eqn. \ref{eqn:isop_yield}) to determine the isoprene emissions.
-    By replacing $\Omega_{HCHO}$ and $B$ with OMI based values, the $E_{isop}$ is the only unknown.
+    By replacing $\Omega_{HCHO}$ and $B$ with OMI based values, $E_{isop}$ is the only unknown.
     The $B$ackground from OMI  is determined using the mean column HCHO measured over the remote pacific ocean (180-120$^{\circ}$W, 10-60$^{\circ}$S).
     This is gives us a background which is appropriate for the Australian latitudes, and is shown in Figure TODO: figure with background region highlighted and a time series of background values.
     When calculating the $E_{isop}$ from our modeled slope with OMI HCHO and background, we end up with negative emissions wherever the OMI HCHO column is less than the OMI background (as $E_{isop} = \frac{\Omega_{HCHO} - B}{S}$).
->>>>>>> 55d9bf088aa55b2ea02a367ed486ace585376696
+    These are set to zero, which increases the average by around TODO: X\%.
+    
+    Figure \ref{fig:E_isop_vs_hcho_model_sample} shows the modelled isoprene emissions and column HCHO concentrations along with the RMA regression line, sampled from grid boxes over Australia for January 2005.
+    Some affects from the low emissions in grid boxes which are largely oceanic can be seen and are handled by TODO: handle these and document here.
+    Due to the low horizontal resolution of GEOS-Chem (2 by 2.5$^{\circ}$, latitude by longitude), calculations from grid boxes on the coast which are largely oceanic need to be discarded as the change in HCHO is not dominated by emissions of isoprene, as is assumed for Eqn \ref{eqn:isop_yield}.
+    A nested version of GEOS-Chem allows a much better analysis of coastal regions, at 0.25 by 0.3125$^{\circ}$ resolution.
     \begin{figure}[!htbp]
       % Figure from GC_tests.py -> isop_hcho_RMA
       \includegraphics[width=\textwidth]{figures/E_isop_vs_hcho_series_200501.png}
@@ -158,11 +149,9 @@
       \label{fig:E_isop_vs_hcho_model_sample}
     \end{figure}
     
-<<<<<<< HEAD
+    TODO: put this into results
     Using this modelled slope at 2$^{\circ}$ by 2.5$^{\circ}$ and applying it to equation \ref{eqn:isop_yield} with B and $\Omega_{HCHO}$ calculated using OMI satellite measurements provides a new estimate of isoprene emissions.
     Figure \ref{fig:E_isop_200501} shows the emissions calculated this way along with the Emissions output by GEOS-Chem averaged over January, 2005.
-    
-    
     \begin{figure}[!htbp]
       % Figure from Inversion.py -> check_against_MEGAN()
       \includegraphics[width=\textwidth]{figures/E_Comparison.png}
@@ -172,10 +161,6 @@
       }
       \label{fig:E_isop_200501}
     \end{figure}
-=======
-    Due to the low horizontal resolution of GEOS-Chem (2 by 2.5$^{\circ}$, latitude by longitude), calculations from grid boxes on the coast which are largely oceanic need to be discarded as the change in HCHO is not dominated by emissions of isoprene, as is assumed for Eqn \ref{eqn:isop_yield}.
-    A nested version of GEOS-Chem allows a much better analysis of coastal regions, at 0.25 by 0.3125$^{\circ}$ resolution.
->>>>>>> 55d9bf088aa55b2ea02a367ed486ace585376696
     
   \subsection{Emisions drivers}
     Calculated yields of HCHO can be classified using a box model which approximates specific environments.
