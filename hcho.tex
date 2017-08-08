@@ -153,8 +153,9 @@
     
     Once we have calculated this slope, we use the same formula (Eqn. \ref{eqn:isop_yield}) to determine the isoprene emissions.
     By replacing $\Omega_{HCHO}$ and $B$ with OMI based values, $E_{isop}$ is the only unknown.
-    The $B$ackground from OMI  is determined using the mean column HCHO measured over the remote pacific ocean (180-120$^{\circ}$W, 10-60$^{\circ}$S).
-    This is gives us a background which is appropriate for the Australian latitudes, and is shown in Figure TODO: figure with background region highlighted and a time series of background values.
+    The $B$ackground from OMI  is determined using the mean column HCHO measured over the remote pacific ocean (180-120$^{\circ}$W).
+    TODO: Update the background term to do as follows: For this term we average each month of remote ocean measurements, as well as averaging longitudinally within 180-120{\dg}W, and finally $B$ is estimated at each latitude using $\pm 10\dg$.
+    This is gives us a background which is appropriate for any latitude, and is shown in Figure TODO: figure with background region highlighted and a time series of background values.
     When calculating the $E_{isop}$ from our modeled slope with OMI HCHO and background, we end up with negative emissions wherever the OMI HCHO column is less than the OMI background (as $E_{isop} = \frac{\Omega_{HCHO} - B}{S}$).
     These are set to zero, which increases the average by around TODO: X\%.
     
