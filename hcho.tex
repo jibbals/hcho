@@ -82,14 +82,54 @@
     GEOS-5 meteorological fields from NASA's ...(TODO: ref and note) are used to drive transport and coupled with the chemical module of GEOS-Chem.
     MEGAN is used to determine biogenic emissions for our default GEOS-Chem simulation, with subsequent modifications based on top-down estimates made herein.
     
-    Output for an area averaged over 1200 - 1400 local time can be saved for comparison and recalculation with satellite overpass records.
+    Output for an area averaged over 1200 - 1400 local time is saved for comparison and recalculation with satellite overpass records.
+    These averages are used to calculate both the GEOS-Chem based AMF, and the modelled background HCHO over the remote pacific which is used in the reference sector correction for OMI column retrievals.
   
   \subsection{Box model for sources classifications}
     \label{sec:CabbaMecca}
     TODO: Description of CAABA/MECCA and how it's used.
     
-    TODO: Description of how scenario yields can be calculated.
-    
+    CAABA (Chemistry As A Boxmodel Application) estimates the chemical concentrations accounting for J-values (JVAL), simplified and parameterised photolysis (SAPPHO) and simplified emission and depositions (SEMIDEP).
+    CAABA runs in a single scenario (or box) with given emissions, depositions, and initial concentrations, allowing the examination of chemistry in a very specific environment to be modelled with high temporal resolution.
+    This has been used with an atmospheric chemistry model MECCA (Module Efficiently Calculating the Chemistry of the Atmosphere) which implements tropospheric and stratospheric chemistry for both the gas and the aqueous phases \citep{Sander2005}.
+    For our purposes it's worth noting that MECCAs chemical mechanism includes basic O$_3$, CH$_4$, NO$_X$, and HO$_X$ chemistry, as well as non methane hydrocarbon (NMHC) chemistry, considering gas phase, aqueus phase, and heterogenous reactions. \citep{Sander2005}
+    For the numerical integration, MECCA uses the KPP software \citep{SanduSander2006}, which takes chemical reactions and their rate coefficients and forms efficient code for integral solutions to the system.
+    The combination of the CAABA box model with MECCA module is called CAABA/MECCA and is currently at version 3.
+    CAABA/MECCA been implemented for various calculations including ozone chemistry throughout the atmosphere in \cite{Zanis2014}.
+    The user manual is available online at \url{http://www.rolf-sander.net/messy/mecca/caaba_mecca_manual.pdf}.
+
+      TODO: Description of how scenario yields can be calculated.
+      We perscribe parameters values approximating three seperate (and relatively broad) scenarios: forest, urban, and scrubland.
+      These parameters are shown in Table TODO: table of parameters for our scenarios!
+      The initial concentrations, the influx, (TODO: check this) and the deposition rates of various chemical species or families is perscribed, chemical creation and destruction, and other loss rates are determined every X minutes.
+      This is done by altering a scenarios file which does not change over the lifetime (TODO: 40 days?) of the model runs.
+      For each scenario, two nearly identical model runs are performed, one with an injection of isoprene occuring on (TODO: when/howmuch is this injection).
+      The concentrations of isoprene and HCHO for our three scenarios, with and without the isoprene injection, is plotted over time in figure TODO: CAABA/MECCA scenario figures.
+      The yield of HCHO from isoprene is then calculated by looking at the difference between each parallel run to determine how much of the injected isoprene transformed into HCHO.
+      TODO: Calculations for this (from Luke, double check these and enter them here).
+      
+      \begin{table}[t]
+        \caption{Parameters for each scenario used in CAABA/MECCA model runs. TODO: fill these values in}
+        %    Parameter | S1, S2, S3
+      \begin{tabular}{ c |  c   c   c  } 
+        \hline
+        Parameter(units) 		 & Forest & Scrublands & Urban\\
+        \hline
+        Initial concentrations & & & \\
+        NO$_X$(molec cm$^{-3}$)		 & low  & low  & high \\
+        O$_3$(molec cm$^{-3}$)  & mid & mid & low \\
+        HO$_X$(molec cm$^{-3}$) & & & \\
+        \hline 
+        Influx & & & \\
+        NO$_X$(molec cm$^{-3}$ s$^{-1}$)		 & low  & low  & high \\
+        O$_3$(molec cm$^{-3}$ s$^{-1}$)  & mid & mid & low \\
+        HO$_X$(molec cm$^{-3}$ s$^{-1}$) & & & \\
+        \hline
+        Deposition rates? & & & \\
+        \hline
+      \end{tabular}
+      \label{table:CAABAMECCA_Scenarios}
+    \end{table}
   
   \subsection{Campaigns and datasets}
     \label{sec:Campaigns}
@@ -188,9 +228,9 @@
     \end{figure}
     
   \subsection{Emisions drivers}
-    Calculated yields of HCHO can be classified using a box model which approximates specific environments.
+    Calculated yields of HCHO can be classified using a box model which approximates specific environments, as described in Section \ref{sec:CabbaMecca}.
     TODO: A table of different factors affecting emissions for three scenarios; urban, forest, shrublands is given in Table XX.
-    The calculated yields for these scenarios is based on the CAABA/MECCA box model described in Section \ref{sec:CabbaMecca}TODO: compare scenarios yields and show map of Australia with mapped closest scenario(one colour for each scenario, contourf).
+    The calculated yields for these scenarios is based on the CAABA/MECCA box model (described in Section \ref{sec:CabbaMecca}) TODO: compare scenarios yields and show map of Australia with mapped closest scenario(one colour for each scenario, contourf).
     
 \section{Results}
   
